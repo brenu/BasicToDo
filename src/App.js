@@ -1,30 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArchive, FaPlus, FaPlusCircle, FaTimes } from "react-icons/fa";
 
 import './App.css';
 
 function App() {
-  const [list, setList] = useState([
-    // {
-    //   content: "Tarefa 1",
-    //   status: "todo",
-    //   isArchived: false,
-    // },
-    // {
-    //   content: "Tarefa 2",
-    //   status: "doing",
-    //   isArchived: false,
-    // },
-    // {
-    //   content: "Tarefa 3",
-    //   status: "done",
-    //   isArchived: false,
-    // },
-  ]);
+  const [list, setList] = useState(() => {
+    const localList = localStorage.getItem("todo@list");
+
+    if (localList) {
+      return JSON.parse(localList);
+    }
+
+    return [];
+  });
   const [showOnlyArchived, setShowOnlyArchived] = useState(false);
   const [isCreatingItem, setIsCreatingItem] = useState(false);
 
   const [newItemContent, setNewItemContent] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("todo@list", JSON.stringify(list));
+  }, [list]);
 
   function updateStatus(index) {
     const newList = list.map((item,itemIndex) => {
